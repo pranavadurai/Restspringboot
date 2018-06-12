@@ -2,8 +2,10 @@ package com.rest.mastermicro.Exception;
 
 import java.util.Date;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,15 @@ public class CustomResponseEntityexceptionhandler extends ResponseEntityExceptio
 		ExceptionResponse exceptionresponse = new ExceptionResponse(new Date(),ex.getMessage(), webreq.getDescription(false));
 		
 		return new ResponseEntity<Object>(exceptionresponse, HttpStatus.NOT_FOUND);
+	}
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+			MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		ExceptionResponse exceptionresponse = new ExceptionResponse(new Date(),"Validation Faild", ex.getBindingResult().toString());
+		
+		return new ResponseEntity<Object>(exceptionresponse, HttpStatus.BAD_REQUEST);
 	}
 	
 }
